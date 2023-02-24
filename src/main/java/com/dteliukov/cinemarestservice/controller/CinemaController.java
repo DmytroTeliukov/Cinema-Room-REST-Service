@@ -1,9 +1,12 @@
 package com.dteliukov.cinemarestservice.controller;
 
 import com.dteliukov.cinemarestservice.exception.AlreadyPurchasedTicketException;
+import com.dteliukov.cinemarestservice.exception.NotFoundTicketException;
 import com.dteliukov.cinemarestservice.exception.SeatOutOfBoundsException;
 import com.dteliukov.cinemarestservice.model.common.PurchasedTicket;
 import com.dteliukov.cinemarestservice.model.common.Seat;
+import com.dteliukov.cinemarestservice.model.common.Ticket;
+import com.dteliukov.cinemarestservice.model.request.Token;
 import com.dteliukov.cinemarestservice.model.response.RoomInfo;
 import com.dteliukov.cinemarestservice.service.RoomService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -31,6 +34,16 @@ public class CinemaController {
     @PostMapping("/purchase")
     public PurchasedTicket purchase(@RequestBody Seat seat) {
         return roomService.purchase(seat);
+    }
+
+    @PostMapping("/return")
+    public Ticket returnTicket(@RequestBody Token token) {
+        return roomService.returnTicket(token);
+    }
+
+    @ExceptionHandler(NotFoundTicketException.class)
+    public ResponseEntity<?> handlerNotFoundTicket(NotFoundTicketException e) {
+        return new ResponseEntity<>(errorMessage(e.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(SeatOutOfBoundsException.class)
