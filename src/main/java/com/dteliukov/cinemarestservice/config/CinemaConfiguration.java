@@ -2,6 +2,7 @@ package com.dteliukov.cinemarestservice.config;
 
 import com.dteliukov.cinemarestservice.model.common.Room;
 import com.dteliukov.cinemarestservice.model.common.Seat;
+import com.dteliukov.cinemarestservice.model.property.AccessPasswordProperty;
 import com.dteliukov.cinemarestservice.model.property.PriceRangeProperty;
 import com.dteliukov.cinemarestservice.model.property.SeatRangeProperty;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +30,9 @@ public class CinemaConfiguration {
     @Value("${cinema.border-first-row}")
     private int borderFirstRow;
 
+    @Value("${cinema.password}")
+    private String secretPassword;
+
     @Bean
     public Room getRoom() {
         return new Room(rows, columns, 0,
@@ -50,6 +54,10 @@ public class CinemaConfiguration {
         return new PriceRangeProperty(firstPrice, secondPrice, borderFirstRow);
     }
 
+    @Bean
+    public AccessPasswordProperty getAccessPasswordProperty() {
+        return new AccessPasswordProperty(secretPassword);
+    }
 
     private Set<Seat> generateSeats() {
         Set<Seat> seats = new TreeSet<>(Comparator
