@@ -26,5 +26,7 @@ public class RoomRepository {
     public void deleteSeat(Seat seat) {
         room.getSeats().remove(seat);
     }
+
+    public void addSeat(Seat seat) { room.getSeats().add(seat); }
 }
 
