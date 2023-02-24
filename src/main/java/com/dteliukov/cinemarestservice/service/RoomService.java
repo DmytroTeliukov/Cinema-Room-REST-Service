@@ -8,6 +8,7 @@ import com.dteliukov.cinemarestservice.model.common.Seat;
 import com.dteliukov.cinemarestservice.model.common.Ticket;
 import com.dteliukov.cinemarestservice.model.property.PriceRangeProperty;
 import com.dteliukov.cinemarestservice.model.property.SeatRangeProperty;
+import com.dteliukov.cinemarestservice.model.request.Token;
 import com.dteliukov.cinemarestservice.model.response.RoomInfo;
 import com.dteliukov.cinemarestservice.repository.RoomRepository;
 import com.dteliukov.cinemarestservice.repository.TicketRepository;
@@ -52,6 +53,8 @@ public class RoomService {
         return ticketRepository.save(ticket);
     }
 
+
+
     private Ticket generateTicket(Seat seat) {
         int price = calcPrice(seat);
         return new Ticket(seat.row(), seat.column(), price);
@@ -63,16 +66,16 @@ public class RoomService {
     }
 
     private void validateSeat(Seat seat) {
-        if (checkSeat(seat)) {
+        if (!isValidSeat(seat)) {
             throw new SeatOutOfBoundsException();
         } else if (!roomRepository.isExistSeat(seat)) {
             throw new AlreadyPurchasedTicketException();
         }
     }
 
-    private boolean checkSeat(Seat seat) {
-        return !(checkSeatRange(seat.row(), rowSeatRange.min(), rowSeatRange.max()) &&
-                checkSeatRange(seat.column(), columnSeatRange.min(), columnSeatRange.max()));
+    private boolean isValidSeat(Seat seat) {
+        return checkSeatRange(seat.row(), rowSeatRange.min(), rowSeatRange.max()) &&
+                checkSeatRange(seat.column(), columnSeatRange.min(), columnSeatRange.max());
     }
 
     private boolean checkSeatRange(int seatNumber, int min, int max) {
