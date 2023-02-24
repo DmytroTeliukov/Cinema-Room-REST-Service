@@ -2,6 +2,8 @@ package com.dteliukov.cinemarestservice.config;
 
 import com.dteliukov.cinemarestservice.model.common.Room;
 import com.dteliukov.cinemarestservice.model.common.Seat;
+import com.dteliukov.cinemarestservice.model.property.PriceRangeProperty;
+import com.dteliukov.cinemarestservice.model.property.SeatRangeProperty;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,11 +20,36 @@ public class CinemaConfiguration {
     @Value("${cinema.columns}")
     private int columns;
 
+    @Value("${cinema.first-price}")
+    private int firstPrice;
+
+    @Value("${cinema.second-price}")
+    private int secondPrice;
+
+    @Value("${cinema.border-first-row}")
+    private int borderFirstRow;
+
     @Bean
     public Room getRoom() {
         return new Room(rows, columns, 0,
                 rows * columns, 0, generateSeats());
     }
+
+    @Bean(name = "row_seat_range")
+    public SeatRangeProperty getRowSeatRangeProperty() {
+        return new SeatRangeProperty(0, rows);
+    }
+
+    @Bean(name = "column_seat_range")
+    public SeatRangeProperty getColumnSeatRangeProperty() {
+        return new SeatRangeProperty(0, columns);
+    }
+
+    @Bean
+    public PriceRangeProperty getPriceRangeProperty() {
+        return new PriceRangeProperty(firstPrice, secondPrice, borderFirstRow);
+    }
+
 
     private Set<Seat> generateSeats() {
         Set<Seat> seats = new TreeSet<>(Comparator
