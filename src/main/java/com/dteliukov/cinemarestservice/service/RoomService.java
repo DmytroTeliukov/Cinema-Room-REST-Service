@@ -1,6 +1,7 @@
 package com.dteliukov.cinemarestservice.service;
 
 import com.dteliukov.cinemarestservice.exception.AlreadyPurchasedTicketException;
+import com.dteliukov.cinemarestservice.exception.NotFoundTicketException;
 import com.dteliukov.cinemarestservice.exception.SeatOutOfBoundsException;
 import com.dteliukov.cinemarestservice.model.common.PurchasedTicket;
 import com.dteliukov.cinemarestservice.model.common.Room;
@@ -53,7 +54,13 @@ public class RoomService {
         return ticketRepository.save(ticket);
     }
 
-
+    public Ticket returnTicket(Token token) {
+        Ticket ticket = ticketRepository.getTicketByToken(token.token())
+                .orElseThrow(NotFoundTicketException::new);
+        ticketRepository.delete(token.token());
+        roomRepository.addSeat(new Seat(ticket.row(), ticket.column()));
+        return ticket;
+    }
 
     private Ticket generateTicket(Seat seat) {
         int price = calcPrice(seat);
