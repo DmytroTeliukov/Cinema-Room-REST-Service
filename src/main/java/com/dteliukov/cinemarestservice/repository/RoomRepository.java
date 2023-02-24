@@ -18,5 +18,13 @@ public class RoomRepository {
     public Room getRoom() {
         return room;
     }
+
+    public boolean isExistSeat(Seat seat) {
+        return room.getSeats().contains(seat);
+    }
+
+    public void deleteSeat(Seat seat) {
+        room.getSeats().remove(seat);
+    }
 }
 
